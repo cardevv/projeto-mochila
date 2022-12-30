@@ -5,7 +5,7 @@ const lista = document.getElementById("lista")
 const itens = JSON.parse(localStorage.getItem("itens")) || []
 
 
-console.log(itens)
+
 // Uso do forEach para que todos os itens já escritos na lista sejam mantidos ao atualizar a página 
  itens.forEach(elemento => {
   criaElemento(elemento)
@@ -32,9 +32,11 @@ form.addEventListener("submit", function (evento) {
 
       atualizaElemento(itemAtual);
 
+      itens[intens.findIndex(elemento => elemento.id === existe.id)] = itemAtual
+
   }
   else {
-itemAtual.id = itens.length
+itemAtual.id = itens[itens.length -1] ? (itens[itens.length-1]).id +1 : 0;
 
 criaElemento(itemAtual);
 
@@ -74,6 +76,8 @@ function criaElemento (item) {
     novoItem.appendChild(quantidadeItem);
     novoItem.innerHTML += item.nome;
 
+    novoItem.appendChild(botaoDeleta(item.id));
+
     lista.appendChild(novoItem)
 
    
@@ -86,4 +90,24 @@ function atualizaElemento (item) {
   document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade
 
 
+}
+
+function botaoDeleta ( id) {
+const elementoBotao = document.createElement("button")
+  elementoBotao.innerText = "X"
+
+  elementoBotao.addEventListener("click", function () {
+      deletaElemento(this.parentNode, id)
+
+  })
+
+  return elementoBotao
+}
+
+function deletaElemento(tag, id) {
+tag.remove();
+
+itens.splice(itens.findIndex(elemento => elemento.id === id),1)
+
+localStorage.setItem("itens", JSON.stringify(itens))
 }
